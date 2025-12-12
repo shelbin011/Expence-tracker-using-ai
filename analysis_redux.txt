@@ -1,0 +1,6 @@
+Analyzing Expence tracker app...                                
+
+  error - The argument type 'CardTheme' can't be assigned to the parameter type 'CardThemeData?'.  - lib\core\theme\app_theme.dart:26:16 - argument_type_not_assignable
+warning - Unused import: '../widgets/summary_card.dart' - lib\presentation\screens\dashboard_screen.dart:4:8 - unused_import
+   info - Unnecessary use of multiple underscores - lib\presentation\screens\dashboard_screen.dart:207:41 - unnecessary_underscores
+

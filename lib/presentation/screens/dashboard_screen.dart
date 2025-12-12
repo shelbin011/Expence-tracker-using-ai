@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../logic/providers/finance_provider.dart';
-import '../widgets/summary_card.dart';
+
 import '../widgets/transaction_tile.dart';
-import '../widgets/app_drawer.dart';
 import '../../core/constants/app_colors.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -13,9 +12,25 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        toolbarHeight: 80,
+        title: Row(
+          children: [
+            const CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage('https://i.pravatar.cc/150?img=11'), // Placeholder
+            ),
+            const Spacer(),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.search, size: 28),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.notifications_outlined, size: 28),
+            ),
+          ],
+        ),
       ),
-      drawer: const AppDrawer(),
       body: Consumer<FinanceProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {
@@ -23,86 +38,173 @@ class DashboardScreen extends StatelessWidget {
           }
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Financial Tips Section
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  color: Theme.of(context).colorScheme.tertiaryContainer,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.lightbulb, color: Colors.amber),
-                            const SizedBox(width: 8),
-                            Text("Financial Tip", style: Theme.of(context).textTheme.titleMedium),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          provider.getDailyTip(),
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
+                // Balance Card
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryLight,
+                    borderRadius: BorderRadius.circular(32),
                   ),
-                ),
-                const SizedBox(height: 20),
-
-                // Balances Grid
-                SizedBox(
-                  height: 240, // Adjust based on need
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 1.4,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SummaryCard(
-                        title: 'Balance',
-                        amount: '\$${provider.balance.toStringAsFixed(2)}',
-                        icon: Icons.account_balance_wallet,
-                        color: AppColors.primary,
-                        backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Your Balance",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          Icon(Icons.more_horiz, color: AppColors.textPrimary.withValues(alpha: 0.6))
+                        ],
                       ),
-                      SummaryCard(
-                        title: 'Income',
-                        amount: '\$${provider.totalIncome.toStringAsFixed(2)}',
-                        icon: Icons.arrow_downward,
-                        color: AppColors.income,
-                        backgroundColor: AppColors.income.withValues(alpha: 0.1),
+                      const SizedBox(height: 10),
+                      Text(
+                        '\$${provider.balance.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
+                        ),
                       ),
-                      SummaryCard(
-                        title: 'Expenses',
-                        amount: '\$${provider.totalExpense.toStringAsFixed(2)}',
-                        icon: Icons.arrow_upward,
-                        color: AppColors.expense,
-                        backgroundColor: AppColors.expense.withValues(alpha: 0.1),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text("Account Number", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                              SizedBox(height: 4),
+                              Text("*** **** **** 3424", style: TextStyle(fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text("Expired Date", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                              SizedBox(height: 4),
+                              Text("25/12/2029", style: TextStyle(fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ],
                       ),
-                      SummaryCard(
-                        title: 'Goals Active',
-                        amount: '${provider.goals.length}',
-                        icon: Icons.flag,
-                        color: Colors.orange,
-                        backgroundColor: Colors.orange.withValues(alpha: 0.1),
+                      const SizedBox(height: 24),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                elevation: 0,
+                              ),
+                              child: const Text("Send"),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.accent,
+                                foregroundColor: AppColors.primary,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                elevation: 0,
+                              ),
+                              child: const Text("Request"),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Icon(Icons.grid_view, color: AppColors.primary),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
-                Text("Recent Transactions", style: Theme.of(context).textTheme.headlineSmall),
-                const SizedBox(height: 10),
-                ListView.builder(
+                const SizedBox(height: 30),
+                
+                // Overview Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Overview",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "Weekly",
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Income / Spending Row
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildOverviewCard(
+                        context,
+                        title: "Income",
+                        amount: '\$${provider.totalIncome.toStringAsFixed(2)}',
+                        icon: Icons.arrow_downward,
+                        iconBg: AppColors.primary,
+                        iconColor: Colors.white,
+                        bg: AppColors.primaryLight,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildOverviewCard(
+                        context,
+                        title: "Spending",
+                        amount: '\$${provider.totalExpense.toStringAsFixed(2)}',
+                        icon: Icons.arrow_upward,
+                        iconBg: Colors.white,
+                        iconColor: AppColors.primary,
+                        bg: AppColors.primaryLight.withValues(alpha: 0.5), // Slightly lighter or different
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                
+                 // Recent Transactions Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Recent",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "View All",
+                      style: TextStyle(color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+                 const SizedBox(height: 10),
+                ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: provider.transactions.take(5).length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 10),
                   itemBuilder: (ctx, index) {
                     final transaction = provider.transactions[index];
                     return TransactionTile(
@@ -111,10 +213,52 @@ class DashboardScreen extends StatelessWidget {
                     );
                   },
                 ),
+                const SizedBox(height: 30),
               ],
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildOverviewCard(BuildContext context, {
+    required String title,
+    required String amount,
+    required IconData icon,
+    required Color iconBg,
+    required Color iconColor,
+    required Color bg,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: iconBg,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: iconColor, size: 16),
+              ),
+              const SizedBox(width: 8),
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            amount,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }
