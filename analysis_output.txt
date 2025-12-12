@@ -1,0 +1,13 @@
+Analyzing Expence tracker app...                                
+
+warning - Unused import: '../../core/constants/app_colors.dart' - lib\presentation\screens\add_transaction_screen.dart:6:8 - unused_import
+   info - 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre - lib\presentation\screens\add_transaction_screen.dart:156:17 - deprecated_member_use
+warning - Unused import: '../../core/constants/app_colors.dart' - lib\presentation\screens\analytics_screen.dart:5:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\dashboard_screen.dart:73:60 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\dashboard_screen.dart:80:59 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\dashboard_screen.dart:87:60 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\screens\dashboard_screen.dart:94:56 - deprecated_member_use
+warning - Unused import: 'package:intl/intl.dart' - lib\presentation\screens\goals_screen.dart:3:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\summary_card.dart:37:36 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\presentation\widgets\transaction_tile.dart:34:34 - deprecated_member_use
+
