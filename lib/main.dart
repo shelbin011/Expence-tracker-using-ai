@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'core/theme/app_theme.dart';
 import 'logic/providers/finance_provider.dart';
+import 'logic/providers/user_provider.dart';
 import 'logic/providers/theme_provider.dart';
 import 'presentation/screens/home_screen.dart'; // We will create this next
 
@@ -17,6 +18,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => FinanceProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),

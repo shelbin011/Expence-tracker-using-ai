@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../logic/providers/finance_provider.dart';
 import '../../logic/providers/theme_provider.dart';
+import '../../logic/providers/user_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -12,10 +13,17 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         children: [
-          const UserAccountsDrawerHeader(
-            accountName: Text("John Doe"),
-            accountEmail: Text("john.doe@example.com"),
-            currentAccountPicture: CircleAvatar(child: Icon(Icons.person, size: 40)),
+          Consumer<UserProvider>(
+            builder: (ctx, userProvider, _) {
+              return UserAccountsDrawerHeader(
+                accountName: Text(userProvider.name),
+                accountEmail: Text(userProvider.email),
+                currentAccountPicture: const CircleAvatar(child: Icon(Icons.person, size: 40)),
+                onDetailsPressed: () {
+                    _showEditProfileDialog(context, userProvider);
+                },
+              );
+            },
           ),
            ListTile(
             leading: const Icon(Icons.palette),
@@ -59,6 +67,44 @@ class SettingsScreen extends StatelessWidget {
                 ),
               );
             },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditProfileDialog(BuildContext context, UserProvider userProvider) {
+    final nameController = TextEditingController(text: userProvider.name);
+    final emailController = TextEditingController(text: userProvider.email);
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Edit Profile'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(labelText: 'Name'),
+            ),
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              userProvider.updateUser(nameController.text, emailController.text);
+              Navigator.pop(ctx);
+            },
+            child: const Text('Save'),
           ),
         ],
       ),
