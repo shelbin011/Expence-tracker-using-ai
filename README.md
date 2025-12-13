@@ -1,6 +1,6 @@
 # finance_tracker
 
-A new Flutter project.
+A new Flutter project for tracking down your expences. this is complety built using ai for testing
 
 ## Getting Started
 
