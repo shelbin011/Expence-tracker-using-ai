@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../logic/providers/finance_provider.dart';
+import '../../logic/providers/user_provider.dart';
 import '../../data/models/goal_model.dart';
 
 class GoalsScreen extends StatelessWidget {
@@ -60,6 +61,7 @@ class GoalsScreen extends StatelessWidget {
       ),
       body: Consumer<FinanceProvider>(
         builder: (context, provider, child) {
+          final currency = Provider.of<UserProvider>(context).currency;
           if (provider.goals.isEmpty) {
             return const Center(child: Text("No goals set yet."));
           }
@@ -101,8 +103,8 @@ class GoalsScreen extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Saved: \$${goal.savedAmount.toStringAsFixed(0)}'),
-                            Text('Target: \$${goal.targetAmount.toStringAsFixed(0)}'),
+                            Text('Saved: $currency${goal.savedAmount.toStringAsFixed(0)}'),
+                            Text('Target: $currency${goal.targetAmount.toStringAsFixed(0)}'),
                           ],
                         ),
                       ],

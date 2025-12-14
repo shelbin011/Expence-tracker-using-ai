@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../data/models/transaction_model.dart';
 import '../../core/constants/app_colors.dart';
+import 'package:provider/provider.dart';
+import '../../logic/providers/user_provider.dart';
 
 class TransactionTile extends StatelessWidget {
   final TransactionModel transaction;
@@ -17,6 +19,7 @@ class TransactionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isIncome = transaction.type == 'income';
     final prefix = isIncome ? '+' : '-';
+    final currency = Provider.of<UserProvider>(context).currency;
     // Design: Icon on left (rounded square or circle), Title bold, Date below, Amount right.
     
     return Dismissible(
@@ -70,7 +73,7 @@ class TransactionTile extends StatelessWidget {
               ),
             ),
             Text(
-              '$prefix\$${transaction.amount.toStringAsFixed(2)}',
+              '$prefix$currency${transaction.amount.toStringAsFixed(2)}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,

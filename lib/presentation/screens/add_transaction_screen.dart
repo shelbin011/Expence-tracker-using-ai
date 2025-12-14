@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../logic/providers/finance_provider.dart';
+import '../../logic/providers/user_provider.dart';
 import '../../data/models/transaction_model.dart';
 
 
@@ -128,7 +129,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               const SizedBox(height: 10),
               TextFormField(
                 controller: _amountController,
-                decoration: const InputDecoration(labelText: 'Amount', prefixText: '\$'),
+                decoration: InputDecoration(labelText: 'Amount', prefixText: Provider.of<UserProvider>(context).currency),
                 keyboardType: TextInputType.number,
                  validator: (val) {
                   if (val == null || val.isEmpty) return 'Please enter an amount';

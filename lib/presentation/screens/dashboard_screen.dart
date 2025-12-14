@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../logic/providers/finance_provider.dart';
+import '../../logic/providers/user_provider.dart';
 
 import '../widgets/transaction_tile.dart';
 import '../../core/constants/app_colors.dart';
@@ -33,6 +34,7 @@ class DashboardScreen extends StatelessWidget {
       ),
       body: Consumer<FinanceProvider>(
         builder: (context, provider, child) {
+          final currency = Provider.of<UserProvider>(context).currency;
           if (provider.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -64,7 +66,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        '\$${provider.balance.toStringAsFixed(2)}',
+                        '$currency${provider.balance.toStringAsFixed(2)}',
                         style: const TextStyle(
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
@@ -162,7 +164,7 @@ class DashboardScreen extends StatelessWidget {
                       child: _buildOverviewCard(
                         context,
                         title: "Income",
-                        amount: '\$${provider.totalIncome.toStringAsFixed(2)}',
+                        amount: '$currency${provider.totalIncome.toStringAsFixed(2)}',
                         icon: Icons.arrow_downward,
                         iconBg: AppColors.primary,
                         iconColor: Colors.white,
@@ -174,7 +176,7 @@ class DashboardScreen extends StatelessWidget {
                       child: _buildOverviewCard(
                         context,
                         title: "Spending",
-                        amount: '\$${provider.totalExpense.toStringAsFixed(2)}',
+                        amount: '$currency${provider.totalExpense.toStringAsFixed(2)}',
                         icon: Icons.arrow_upward,
                         iconBg: Colors.white,
                         iconColor: AppColors.primary,
