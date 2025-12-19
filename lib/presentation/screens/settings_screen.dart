@@ -4,6 +4,7 @@ import '../../logic/providers/finance_provider.dart';
 import '../../logic/providers/theme_provider.dart';
 import '../../logic/providers/user_provider.dart';
 import '../../core/constants/app_colors.dart';
+import '../../logic/services/csv_export_service.dart';
 import '../../core/constants/app_constants.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -66,6 +67,25 @@ class SettingsScreen extends StatelessWidget {
             leading: Icon(Icons.notifications),
             title: Text('Notifications'),
             trailing: Icon(Icons.arrow_forward_ios, size: 16),
+          ),
+          ListTile(
+            leading: const Icon(Icons.file_download, color: Colors.blue),
+            title: const Text('Export to CSV'),
+            onTap: () async {
+               final transactions = Provider.of<FinanceProvider>(context, listen: false).transactions;
+               if (transactions.isEmpty) {
+                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("No transactions to export.")));
+                 return;
+               }
+               
+               try {
+                 await CsvExportService.exportTransactions(transactions);
+               } catch (e) {
+                 if (context.mounted) {
+                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Export failed: $e")));
+                 }
+               }
+            },
           ),
           const Divider(),
           ListTile(
@@ -163,7 +183,7 @@ class SettingsScreen extends StatelessWidget {
                   Navigator.pop(ctx);
                 },
               );
-            }).toList(),
+            }),
           ],
         );
       },

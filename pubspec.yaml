@@ -43,6 +43,9 @@ dependencies:
   shared_preferences: ^2.5.4
   google_fonts: ^6.3.3
   font_awesome_flutter: ^10.12.0
+  csv: ^6.0.0
+  path_provider: ^2.1.5
+  share_plus: ^12.0.1
 
 dev_dependencies:
   flutter_test:
