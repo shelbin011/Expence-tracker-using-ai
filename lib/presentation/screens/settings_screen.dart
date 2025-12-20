@@ -51,6 +51,19 @@ class SettingsScreen extends StatelessWidget {
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () => _showCountryPicker(context),
           ),
+          ListTile(
+            leading: const Icon(Icons.monetization_on),
+            title: const Text('Monthly Budget'),
+            subtitle: Consumer<UserProvider>(
+               builder: (ctx, userProvider, _) => Text(
+                userProvider.monthlyBudget > 0 
+                  ? '${userProvider.currency}${userProvider.monthlyBudget.toStringAsFixed(2)}' 
+                  : 'Not Set'
+              ),
+            ),
+            trailing: const Icon(Icons.edit, size: 16),
+            onTap: () => _showBudgetDialog(context),
+          ),
            ListTile(
             leading: const Icon(Icons.palette),
             title: const Text('Theme'),
@@ -187,6 +200,45 @@ class SettingsScreen extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  void _showBudgetDialog(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final controller = TextEditingController(
+      text: userProvider.monthlyBudget > 0 ? userProvider.monthlyBudget.toStringAsFixed(0) : ''
+    );
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Set Monthly Budget'),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            labelText: 'Budget Limit',
+            prefixText: userProvider.currency,
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+             onPressed: () => Navigator.pop(ctx),
+             child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              final val = double.tryParse(controller.text);
+              if (val != null) {
+                userProvider.updateBudget(val);
+              }
+              Navigator.pop(ctx);
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
     );
   }
 }

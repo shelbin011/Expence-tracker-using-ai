@@ -20,6 +20,16 @@ class FinanceProvider with ChangeNotifier {
       .where((t) => t.type == 'expense')
       .fold(0.0, (sum, item) => sum + item.amount);
 
+  double get currentMonthExpense {
+    final now = DateTime.now();
+    return _transactions
+        .where((t) =>
+            t.type == 'expense' &&
+            t.date.year == now.year &&
+            t.date.month == now.month)
+        .fold(0.0, (sum, item) => sum + item.amount);
+  }
+
   double get balance => totalIncome - totalExpense;
 
   FinanceProvider() {

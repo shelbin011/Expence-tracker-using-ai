@@ -187,6 +187,88 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 
+                  ],
+                ),
+                const SizedBox(height: 30),
+
+                // Budget Card (New Feature)
+                Consumer<UserProvider>(
+                  builder: (context, userProvider, _) {
+                    if (userProvider.monthlyBudget <= 0) return const SizedBox.shrink();
+
+                    final budget = userProvider.monthlyBudget;
+                    final expense = provider.currentMonthExpense;
+                    final progress = (expense / budget).clamp(0.0, 1.0);
+                    
+                    // Simple Projection: (expense / days_passed) * days_in_month
+                    final now = DateTime.now();
+                    final daysInMonth = DateUtils.getDaysInMonth(now.year, now.month);
+                    final dailyAvg = now.day > 0 ? expense / now.day : 0;
+                    final projected = dailyAvg * daysInMonth;
+
+                    Color progressColor = Colors.green;
+                    if (progress > 0.8) progressColor = Colors.red;
+                    else if (progress > 0.5) progressColor = Colors.orange;
+
+                    return Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withValues(alpha: 0.1),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text("Monthly Budget", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                  Text(
+                                    "${(progress * 100).toStringAsFixed(1)}%",
+                                    style: TextStyle(fontWeight: FontWeight.bold, color: progressColor),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              LinearProgressIndicator(
+                                value: progress,
+                                backgroundColor: Colors.grey[200],
+                                color: progressColor,
+                                minHeight: 8,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '$currency${expense.toStringAsFixed(0)} / $currency${budget.toStringAsFixed(0)}',
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                  Text(
+                                    'Proj: $currency${projected.toStringAsFixed(0)}',
+                                    style: const TextStyle(color: Colors.grey, fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                      ],
+                    );
+                  },
+                ),
+                
                  // Recent Transactions Header
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
