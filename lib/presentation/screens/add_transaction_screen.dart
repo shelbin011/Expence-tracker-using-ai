@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import '../../logic/providers/finance_provider.dart';
 import '../../logic/providers/user_provider.dart';
 import '../../data/models/transaction_model.dart';
+import '../../core/constants/app_constants.dart';
+import '../../core/constants/app_colors.dart';
 
 
 class AddTransactionScreen extends StatefulWidget {
@@ -160,7 +162,16 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 items: _categories.map((cat) {
                   return DropdownMenuItem(
                     value: cat,
-                    child: Text(cat),
+                    child: Row(
+                      children: [
+                        Icon(
+                          AppConstants.categoryIcons[cat] ?? Icons.category,
+                          color: AppConstants.categoryColors[cat] ?? AppColors.primary,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(cat),
+                      ],
+                    ),
                   );
                 }).toList(),
                 onChanged: (val) => setState(() => _selectedCategory = val!),

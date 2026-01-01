@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../data/models/transaction_model.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/constants/app_constants.dart';
 import 'package:provider/provider.dart';
 import '../../logic/providers/user_provider.dart';
 
@@ -20,7 +21,8 @@ class TransactionTile extends StatelessWidget {
     final isIncome = transaction.type == 'income';
     final prefix = isIncome ? '+' : '-';
     final currency = Provider.of<UserProvider>(context).currency;
-    // Design: Icon on left (rounded square or circle), Title bold, Date below, Amount right.
+    final icon = AppConstants.categoryIcons[transaction.category] ?? (isIncome ? Icons.attach_money : Icons.category);
+    final iconColor = AppConstants.categoryColors[transaction.category] ?? AppColors.primary;
     
     return Dismissible(
       key: Key(transaction.id.toString()),
@@ -48,12 +50,12 @@ class TransactionTile extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: iconColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(
-                isIncome ? Icons.arrow_downward : Icons.shopping_bag_outlined, // Example icon based on type logic normally
-                color: AppColors.primary,
+                icon,
+                color: iconColor,
               ),
             ),
             const SizedBox(width: 16),

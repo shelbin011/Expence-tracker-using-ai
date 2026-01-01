@@ -61,7 +61,10 @@ class DashboardScreen extends StatelessWidget {
                             "Your Balance",
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                           ),
-                          Icon(Icons.more_horiz, color: AppColors.textPrimary.withValues(alpha: 0.6))
+                          InkWell(
+                             onTap: () => _showEditAccountDialog(context),
+                             child: Icon(Icons.more_horiz, color: AppColors.textPrimary.withValues(alpha: 0.6))
+                          )
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -79,28 +82,29 @@ class DashboardScreen extends StatelessWidget {
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text("Account Number", style: TextStyle(fontSize: 12, color: Colors.grey)),
-                              SizedBox(height: 4),
-                              Text("*** **** **** 3424", style: TextStyle(fontWeight: FontWeight.bold)),
+                            children: [
+                              const Text("Account Number", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                              const SizedBox(height: 4),
+                              Text(provider.accountNumber, style: const TextStyle(fontWeight: FontWeight.bold)),
                             ],
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text("Expired Date", style: TextStyle(fontSize: 12, color: Colors.grey)),
-                              SizedBox(height: 4),
-                              Text("25/12/2029", style: TextStyle(fontWeight: FontWeight.bold)),
+                            children: [
+                              const Text("Expired Date", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                              const SizedBox(height: 4),
+                              Text(provider.expiryDate, style: const TextStyle(fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ],
                       ),
                       const SizedBox(height: 24),
                       Row(
-                        children: [
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Send feature coming soon!")));
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 foregroundColor: Colors.white,
@@ -114,7 +118,9 @@ class DashboardScreen extends StatelessWidget {
                           const SizedBox(width: 12),
                           Expanded(
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Request feature coming soon!")));
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.accent,
                                 foregroundColor: AppColors.primary,
@@ -341,6 +347,37 @@ class DashboardScreen extends StatelessWidget {
           Text(
             amount,
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+    );
+  }
+
+  void _showEditAccountDialog(BuildContext context) {
+    final provider = Provider.of<UserProvider>(context, listen: false);
+    final accountController = TextEditingController(text: provider.accountNumber);
+    final expiryController = TextEditingController(text: provider.expiryDate);
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Edit Account Details'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(controller: accountController, decoration: const InputDecoration(labelText: 'Account Number')),
+            TextField(controller: expiryController, decoration: const InputDecoration(labelText: 'Expiry Date')),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          FilledButton(
+            onPressed: () {
+              provider.updateAccountDetails(accountController.text, expiryController.text);
+              Navigator.pop(ctx);
+            },
+            child: const Text('Save'),
           ),
         ],
       ),
