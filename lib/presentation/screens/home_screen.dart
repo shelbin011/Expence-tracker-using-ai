@@ -5,6 +5,7 @@ import 'analytics_screen.dart';
 import 'add_transaction_screen.dart';
 import 'goals_screen.dart';
 import 'settings_screen.dart';
+import 'todo_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     const DashboardScreen(),
     const AnalyticsScreen(),
-    const AddTransactionScreen(),
+    const TodoListScreen(),
     const GoalsScreen(),
     const SettingsScreen(),
   ];
@@ -28,6 +29,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_currentIndex],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddTransactionScreen()),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (index) {
@@ -47,9 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Analytics',
           ),
           NavigationDestination(
-            icon: Icon(Icons.add_circle_outline),
-            selectedIcon: Icon(Icons.add_circle),
-            label: 'Add',
+            icon: Icon(Icons.list_alt_outlined),
+            selectedIcon: Icon(Icons.list_alt),
+            label: 'Tasks',
           ),
           NavigationDestination(
             icon: Icon(FontAwesomeIcons.bullseye),

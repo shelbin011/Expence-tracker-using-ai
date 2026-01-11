@@ -6,6 +6,7 @@ import 'core/theme/app_theme.dart';
 import 'logic/providers/finance_provider.dart';
 import 'logic/providers/user_provider.dart';
 import 'logic/providers/theme_provider.dart';
+import 'logic/providers/todo_provider.dart';
 import 'presentation/screens/home_screen.dart'; // We will create this next
 
 void main() {
@@ -19,6 +20,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => FinanceProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => TodoProvider()),
       ],
       child: const MyApp(),
     ),

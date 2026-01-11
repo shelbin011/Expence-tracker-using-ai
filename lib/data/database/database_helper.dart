@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/transaction_model.dart';
 import '../models/goal_model.dart';
+import '../models/todo_model.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -21,8 +22,9 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: _createDB,
+      onUpgrade: _onUpgrade,
     );
   }
 
@@ -55,6 +57,32 @@ CREATE TABLE goals (
   isCompleted $boolType
 )
 ''');
+
+    await db.execute('''
+CREATE TABLE todos (
+  id $idType,
+  title $textType,
+  isCompleted $boolType,
+  date $textType
+)
+''');
+  }
+
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+      const textType = 'TEXT NOT NULL';
+      const boolType = 'INTEGER NOT NULL';
+      
+      await db.execute('''
+CREATE TABLE todos (
+  id $idType,
+  title $textType,
+  isCompleted $boolType,
+  date $textType
+)
+''');
+    }
   }
 
   // Transaction CRUD
@@ -132,6 +160,38 @@ CREATE TABLE goals (
     final db = await instance.database;
     return await db.delete(
       'goals',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  // Todo CRUD
+  Future<int> createTodo(TodoModel todo) async {
+    final db = await instance.database;
+    return await db.insert('todos', todo.toMap());
+  }
+
+  Future<List<TodoModel>> readAllTodos() async {
+    final db = await instance.database;
+    final orderBy = 'date DESC';
+    final result = await db.query('todos', orderBy: orderBy);
+    return result.map((json) => TodoModel.fromMap(json)).toList();
+  }
+
+  Future<int> updateTodo(TodoModel todo) async {
+    final db = await instance.database;
+    return db.update(
+      'todos',
+      todo.toMap(),
+      where: 'id = ?',
+      whereArgs: [todo.id],
+    );
+  }
+
+  Future<int> deleteTodo(int id) async {
+    final db = await instance.database;
+    return await db.delete(
+      'todos',
       where: 'id = ?',
       whereArgs: [id],
     );
