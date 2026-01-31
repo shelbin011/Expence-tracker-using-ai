@@ -4,6 +4,8 @@ import '../../logic/providers/finance_provider.dart';
 import '../../logic/providers/user_provider.dart';
 
 import '../widgets/transaction_tile.dart';
+import '../widgets/transaction_search_delegate.dart';
+import 'add_transaction_screen.dart';
 import '../../core/constants/app_colors.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -22,7 +24,16 @@ class DashboardScreen extends StatelessWidget {
             ),
             const Spacer(),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                 final provider = Provider.of<FinanceProvider>(context, listen: false);
+                 showSearch(
+                   context: context,
+                   delegate: TransactionSearchDelegate(
+                     transactions: provider.transactions,
+                     onDelete: (id) => provider.deleteTransaction(id),
+                   ),
+                 );
+              },
               icon: const Icon(Icons.search, size: 28),
             ),
             IconButton(
@@ -103,7 +114,10 @@ class DashboardScreen extends StatelessWidget {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Send feature coming soon!")));
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (ctx) => const AddTransactionScreen(initialType: 'income')),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
@@ -112,14 +126,17 @@ class DashboardScreen extends StatelessWidget {
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                 elevation: 0,
                               ),
-                              child: const Text("Send"),
+                              child: const Text("Add Income"),
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Request feature coming soon!")));
+                                Navigator.push(
+                                  context, 
+                                  MaterialPageRoute(builder: (ctx) => const AddTransactionScreen(initialType: 'expense')),
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.accent,
@@ -128,7 +145,7 @@ class DashboardScreen extends StatelessWidget {
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                 elevation: 0,
                               ),
-                              child: const Text("Request"),
+                              child: const Text("Add Expense"),
                             ),
                           ),
                           const SizedBox(width: 12),

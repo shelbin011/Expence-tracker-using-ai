@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
+import '../../core/constants/app_colors.dart';
 import '../../logic/providers/finance_provider.dart';
 
 
@@ -55,6 +57,89 @@ class AnalyticsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
+                const Text("Weekly Expenses (Last 7 Days)", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 20),
+                SizedBox(
+                  height: 200,
+                  child: Builder(
+                    builder: (context) {
+                       // Calculate last 7 days data
+                       final now = DateTime.now();
+                       final List<double> dailyTotals = List.filled(7, 0.0);
+                       final List<String> weekDays = [];
+                       
+                       for (int i = 0; i < 7; i++) {
+                         final day = now.subtract(Duration(days: 6 - i));
+                         weekDays.add(DateFormat.E().format(day)); // Mon, Tue...
+                         
+                         // Sum expenses for this day
+                         final dayExpenses = expenseTransactions.where((t) {
+                           return t.date.year == day.year && 
+                                  t.date.month == day.month && 
+                                  t.date.day == day.day;
+                         });
+                         
+                         for (var t in dayExpenses) {
+                           dailyTotals[i] += t.amount;
+                         }
+                       }
+                       
+                       // Find max for Y-axis interval
+                        double maxY = dailyTotals.reduce((curr, next) => curr > next ? curr : next);
+                        if (maxY == 0) maxY = 100;
+                        
+                       return BarChart(
+                         BarChartData(
+                           alignment: BarChartAlignment.spaceAround,
+                           maxY: maxY * 1.2,
+                           barTouchData: BarTouchData(
+                             enabled: true,
+                             touchTooltipData: BarTouchTooltipData(
+                               getTooltipColor: (_) => Colors.blueGrey,
+                               getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                                  return BarTooltipItem(
+                                    rod.toY.toStringAsFixed(1),
+                                    const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  );
+                               },
+                             ),
+                           ),
+                           titlesData: FlTitlesData(
+                             show: true,
+                             bottomTitles: AxisTitles(
+                               sideTitles: SideTitles(
+                                 showTitles: true,
+                                 getTitlesWidget: (double value, TitleMeta meta) {
+                                   if (value.toInt() < 0 || value.toInt() >= weekDays.length) return const SizedBox.shrink();
+                                   return Text(weekDays[value.toInt()], style: const TextStyle(fontSize: 10));
+                                 },
+                               ),
+                             ),
+                             leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                             topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                           ),
+                           gridData: const FlGridData(show: false),
+                           borderData: FlBorderData(show: false),
+                           barGroups: List.generate(7, (index) {
+                             return BarChartGroupData(
+                               x: index,
+                               barRods: [
+                                 BarChartRodData(
+                                   toY: dailyTotals[index],
+                                   color: AppColors.primary,
+                                   width: 16,
+                                   borderRadius: BorderRadius.circular(4),
+                                 ),
+                               ],
+                             );
+                           }),
+                         ),
+                       );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 30),
                 const Text("Expense Breakdown", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
                 SizedBox(

@@ -9,7 +9,9 @@ import '../../core/constants/app_colors.dart';
 
 
 class AddTransactionScreen extends StatefulWidget {
-  const AddTransactionScreen({super.key});
+  final String? initialType;
+
+  const AddTransactionScreen({super.key, this.initialType});
 
   @override
   State<AddTransactionScreen> createState() => _AddTransactionScreenState();
@@ -23,6 +25,14 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   DateTime _selectedDate = DateTime.now();
   String _transactionType = 'expense';
   String _selectedCategory = 'Food';
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialType != null) {
+      _transactionType = widget.initialType!;
+    }
+  }
 
   final List<String> _categories = [
     'Food',
