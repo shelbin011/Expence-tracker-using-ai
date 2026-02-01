@@ -6,6 +6,7 @@ import '../../logic/providers/user_provider.dart';
 import '../widgets/transaction_tile.dart';
 import '../widgets/transaction_search_delegate.dart';
 import 'add_transaction_screen.dart';
+import 'all_transactions_screen.dart';
 import '../../core/constants/app_colors.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -59,8 +60,19 @@ class DashboardScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryLight,
+                    gradient: LinearGradient(
+                      colors: [AppColors.primary, AppColors.primary.withOpacity(0.8)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     borderRadius: BorderRadius.circular(32),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withOpacity(0.3),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,13 +80,17 @@ class DashboardScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            "Your Balance",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          Text(
+                            "Total Balance",
+                            style: TextStyle(
+                              fontSize: 16, 
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white.withOpacity(0.8),
+                            ),
                           ),
                           InkWell(
                              onTap: () => _showEditAccountDialog(context),
-                             child: Icon(Icons.more_horiz, color: AppColors.textPrimary.withValues(alpha: 0.6))
+                             child: Icon(Icons.more_horiz, color: Colors.white.withOpacity(0.8))
                           )
                         ],
                       ),
@@ -82,35 +98,36 @@ class DashboardScreen extends StatelessWidget {
                       Text(
                         '$currency${provider.balance.toStringAsFixed(2)}',
                         style: const TextStyle(
-                          fontSize: 36,
+                          fontSize: 40,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                          color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text("Account Number", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                              Text("Account Number", style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.6))),
                               const SizedBox(height: 4),
-                              Text(provider.accountNumber, style: const TextStyle(fontWeight: FontWeight.bold)),
+                              Text(provider.accountNumber, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                             ],
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text("Expired Date", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                              Text("Expiry Date", style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.6))),
                               const SizedBox(height: 4),
-                              Text(provider.expiryDate, style: const TextStyle(fontWeight: FontWeight.bold)),
+                              Text(provider.expiryDate, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                             ],
                           ),
                         ],
                       ),
                       const SizedBox(height: 24),
                       Row(
+                        children: [
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {
@@ -120,8 +137,8 @@ class DashboardScreen extends StatelessWidget {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.white,
+                                foregroundColor: AppColors.primary,
                                 padding: const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                 elevation: 0,
@@ -139,23 +156,14 @@ class DashboardScreen extends StatelessWidget {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.accent,
-                                foregroundColor: AppColors.primary,
+                                backgroundColor: Colors.white.withOpacity(0.2),
+                                foregroundColor: Colors.white,
                                 padding: const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                 elevation: 0,
                               ),
                               child: const Text("Add Expense"),
                             ),
-                          ),
-                          const SizedBox(width: 12),
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Icon(Icons.grid_view, color: AppColors.primary),
                           ),
                         ],
                       ),
@@ -297,12 +305,17 @@ class DashboardScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      "Recent",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      "Recent Transactions",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      "View All",
-                      style: TextStyle(color: Colors.grey[600]),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const AllTransactionsScreen()),
+                        );
+                      },
+                      child: const Text("View All"),
                     ),
                   ],
                 ),
@@ -340,34 +353,43 @@ class DashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: bg,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+        border: Border.all(color: Colors.grey.withOpacity(0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: iconBg,
+                  color: iconBg.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: iconColor, size: 16),
+                child: Icon(icon, color: iconBg, size: 20),
               ),
-              const SizedBox(width: 8),
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+              Icon(Icons.more_horiz, color: Colors.grey[400], size: 20),
             ],
           ),
           const SizedBox(height: 16),
+          Text(title, style: TextStyle(fontWeight: FontWeight.w500, color: Colors.grey[600], fontSize: 14)),
+          const SizedBox(height: 4),
           Text(
             amount,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
           ),
         ],
       ),
-    );
     );
   }
 

@@ -76,10 +76,22 @@ class SettingsScreen extends StatelessWidget {
               },
             ),
           ),
-          const ListTile(
-            leading: Icon(Icons.notifications),
-            title: Text('Notifications'),
-            trailing: Icon(Icons.arrow_forward_ios, size: 16),
+          ListTile(
+            leading: const Icon(Icons.notifications),
+            title: const Text('Notifications'),
+            trailing: Consumer<UserProvider>(
+               builder: (ctx, userProvider, _) {
+                 return Switch(
+                   value: userProvider.isNotificationsEnabled,
+                   onChanged: (val) {
+                     userProvider.toggleNotifications(val);
+                     ScaffoldMessenger.of(context).showSnackBar(
+                       SnackBar(content: Text(val ? "Notifications Enabled" : "Notifications Disabled"))
+                     );
+                   }
+                 );
+               },
+             ),
           ),
           ListTile(
             leading: const Icon(Icons.file_download, color: Colors.blue),

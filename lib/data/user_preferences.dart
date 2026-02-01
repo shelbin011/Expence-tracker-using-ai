@@ -8,6 +8,8 @@ class UserPreferences {
   static const _keyAccountNumber = 'user_account_number';
   static const _keyExpiryDate = 'user_expiry_date';
 
+  static const _keyNotifications = 'user_notifications';
+
   Future<void> saveUser(String name, String email, String country, double budget, String accountNumber, String expiryDate) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyName, name);
@@ -34,5 +36,15 @@ class UserPreferences {
       'accountNumber': accountNumber,
       'expiryDate': expiryDate,
     };
+  }
+
+  Future<void> saveNotificationPreference(bool isEnabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyNotifications, isEnabled);
+  }
+
+  Future<bool> getNotificationPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_keyNotifications) ?? false;
   }
 }

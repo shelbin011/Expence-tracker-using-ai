@@ -19,6 +19,9 @@ class UserProvider with ChangeNotifier {
   String get expiryDate => _expiryDate;
   String get currency => AppConstants.countryCurrencies[_country] ?? '\$';
 
+  bool _isNotificationsEnabled = false;
+  bool get isNotificationsEnabled => _isNotificationsEnabled;
+
   UserProvider() {
     _loadUser();
   }
@@ -31,6 +34,7 @@ class UserProvider with ChangeNotifier {
     _monthlyBudget = userData['budget'] as double;
     _accountNumber = userData['accountNumber'] as String;
     _expiryDate = userData['expiryDate'] as String;
+    _isNotificationsEnabled = await _userPreferences.getNotificationPreference(); // Load preference
     notifyListeners();
   }
 
@@ -57,6 +61,12 @@ class UserProvider with ChangeNotifier {
     _accountNumber = accountNumber;
     _expiryDate = expiryDate;
     await _userPreferences.saveUser(_name, _email, _country, _monthlyBudget, accountNumber, expiryDate);
+    notifyListeners();
+  }
+
+  Future<void> toggleNotifications(bool value) async {
+    _isNotificationsEnabled = value;
+    await _userPreferences.saveNotificationPreference(value);
     notifyListeners();
   }
 }
